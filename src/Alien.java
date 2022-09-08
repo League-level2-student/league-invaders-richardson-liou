@@ -29,6 +29,7 @@ public class Alien extends GameObject {
 
 	public void update() {
 		y += speed;
+		super.update();
 	}
 
 	void loadImage(String imageFile) {

@@ -14,14 +14,14 @@ public class Projectile extends GameObject{
 		// TODO Auto-generated constructor stub
 		speed =10;
 		if (needImage) {
-		    loadImage ("rocket.png");
+		    loadImage ("bullet.png");
 		}
 
 	}
 	
 	public void draw(Graphics g) {
 		if (gotImage) {
-			g.drawImage(image, x, y, width, height, null);
+			g.drawImage(image, x, y,25, 25, null);
 		} else {
 			g.setColor(Color.BLUE);
 			g.fillRect(x, y, width, height);
@@ -29,7 +29,8 @@ public class Projectile extends GameObject{
 	}
 	
 	public void update() {
-		y+=speed;
+		y-=speed;
+		super.update();
 	}
 	
 	void loadImage(String imageFile) {

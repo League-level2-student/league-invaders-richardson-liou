@@ -5,17 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ObjectManager implements ActionListener{
+public class ObjectManager implements ActionListener {
 	RocketShip rocket;
 	List<Projectile> projectiles = new ArrayList();
 	List<Alien> aliens = new ArrayList();
 	Random random = new Random();
+	int score = 0;
 
 	ObjectManager(RocketShip r) {
 		rocket = r;
 
 	}
 
+	public int getScore() {
+		return score;
+	}
+	
 	public void addProjectile(Projectile p) {
 		projectiles.add(p);
 	}
@@ -43,6 +48,12 @@ public class ObjectManager implements ActionListener{
 
 			}
 		}
+		rocket.update();
+		if(rocket.isActive == true) {
+		checkCollision();
+		
+		}
+		purgeObjects();
 	}
 
 	public void draw(Graphics g) {
@@ -57,19 +68,39 @@ public class ObjectManager implements ActionListener{
 		}
 
 	}
-	
-	public void purgObjects() {
+
+	public void purgeObjects() {
 		for (int i = 0; i < aliens.size(); i++) {
 			Alien numAlien = aliens.get(i);
-			if(numAlien.isActive == false) {
+			if (numAlien.isActive == false) {
 				aliens.remove(numAlien);
 			}
 
 		}
 		for (int i = 0; i < projectiles.size(); i++) {
 			Projectile proj = projectiles.get(i);
-			if(proj.isActive == false) {
+			if (proj.isActive == false) {
 				projectiles.remove(proj);
+			}
+		}
+	}
+
+	public void checkCollision() {
+		for(int i = 0; i<aliens.size(); i++) {
+			Alien numAlien = aliens.get(i);
+			for (int k = 0; k < projectiles.size(); k++) {
+				Projectile proj = projectiles.get(k);
+				
+				if(proj.collisionBox.intersects(numAlien.collisionBox)) {
+					numAlien.isActive = false;
+					proj.isActive = false;
+					score +=1;
+				}
+			}
+			
+			if(rocket.collisionBox.intersects(numAlien.collisionBox)) {
+				numAlien.isActive = false;
+				rocket.isActive = false;
 			}
 		}
 	}
@@ -77,7 +108,7 @@ public class ObjectManager implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		addAlien();
-		
+
 	}
 
 }
